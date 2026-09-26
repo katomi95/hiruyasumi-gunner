@@ -1,7 +1,7 @@
 extends Node3D
 ## PlayerGun：自艦の砲座。操作は照準（マウス）と射撃（左クリック・押しっぱなしで連射）だけ。
 ## 主砲はレーザー。撃った瞬間に照準点まで光の筋が伸び、そのまま当たる。砲身の加熱はない。
-## 砲身は照準位置へ追従する。自動ロックオンはしない（重なった時に照準の色が変わるだけ）
+## 砲塔の模型は表示しない（砲口の位置だけ使い、光の筋はそこから出る）。砲口は照準位置へ追従する。自動ロックオンはしない（重なった時に照準の色が変わるだけ）
 
 const RATE := 6.0
 const DMG := 2.5
@@ -36,6 +36,7 @@ func _ready() -> void:
 	var hm := MeshInstance3D.new()
 	hm.mesh = Models.get_mesh("gun_housing")
 	hm.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	hm.visible = false
 	housing.add_child(hm)
 	pitch_node = Node3D.new()
 	pitch_node.position = Vector3(0, 0.4, -1.0)
@@ -45,6 +46,7 @@ func _ready() -> void:
 		b.mesh = Models.get_mesh("gun_barrel")
 		b.position = Vector3(s * 2.4, 0, 0)
 		b.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		b.visible = false
 		pitch_node.add_child(b)
 		barrels.append(b)
 	muzzle_light = OmniLight3D.new()
