@@ -1,7 +1,7 @@
 extends Node3D
 ## PlayerGun：自艦の砲座。操作は照準（マウス）と射撃（左クリック・押しっぱなしで連射）だけ。
 ## 主砲はレーザー。撃った瞬間に照準点まで光の筋が伸び、そのまま当たる。砲身の加熱はない。
-## 砲塔の模型は表示しない（砲口の位置だけ使い、光の筋はそこから出る）。砲口は照準位置へ追従する。自動ロックオンはしない（重なった時に照準の色が変わるだけ）
+## 砲塔の模型は表示しない。光の筋は画面の左下・右下の端から交互に出る。自動ロックオンはしない（重なった時に照準の色が変わるだけ）
 
 const RATE := 6.0
 const DMG := 2.5
@@ -57,8 +57,14 @@ func _ready() -> void:
 	pitch_node.add_child(muzzle_light)
 
 
+## 砲口：画面の左下（0）・右下（1）の端のすぐ外、カメラから MUZZLE_DEPTH 先
+const MUZZLE_DEPTH := 16.0
+
 func muzzle_pos(i: int) -> Vector3:
-	return (barrels[i] as Node3D).global_transform * Vector3(0, 0, -8.4)
+	var cam: Camera3D = Game.rail.camera
+	var vs := get_viewport().get_visible_rect().size
+	var sp := Vector2(vs.x * (-0.02 if i == 0 else 1.02), vs.y * 1.03)
+	return cam.project_position(sp, MUZZLE_DEPTH)
 
 
 func tick(dt: float) -> void:
@@ -124,7 +130,8 @@ func _fire() -> void:
 	recoil[i] = 1.0
 	Game.fx.beam(mp, to, COL, 1.5, 0.16, 2.6)
 	Game.fx.beam(mp, to, CORE, 0.7, 0.1, 6.0)
-	Game.fx.flash(mp, 5.0, COL, 0.08)
+	Game.fx.flash(mp, 1.2, COL, 0.08)
+	muzzle_light.global_position = mp
 	Game.audio.laser()
 	muzzle_t = 0.1
 	if not aim_hit.is_empty():
