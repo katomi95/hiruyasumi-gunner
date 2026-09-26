@@ -193,7 +193,6 @@ func _draw_play(vs: Vector2, s: float) -> void:
 		else:
 			ctl.draw_rect(r, Color(hc.r, hc.g, hc.b, 0.18))
 	_str(Vector2(hx + 226 * s, hy + 11 * s), "%d%%" % int(ceil(hull)), int(14 * s), hc)
-	_draw_heat_gauge(vs, s)
 	# 上中央：必要な時だけのゲージ
 	if gauge_info["on"]:
 		var gw := 380.0 * s
@@ -374,84 +373,20 @@ func _edge_arrow(vs: Vector2, s: float, sp: Vector2, behind: bool, col: Color, s
 		Color(col.r, col.g, col.b, 0.85))
 
 
-## 砲身温度の色：水色 → 黄 → 赤。オーバーヒート中は赤く点滅
-func _heat_col(heat: float, over: bool) -> Color:
-	if over:
-		return Color(1.0, 0.25, 0.15) if fmod(clock, 0.3) < 0.18 else Color(1.0, 0.55, 0.35)
-	if heat < 0.5:
-		return C_UI.lerp(Color(1.0, 0.85, 0.35), heat / 0.5)
-	return Color(1.0, 0.85, 0.35).lerp(Color(1.0, 0.3, 0.18), (heat - 0.5) / 0.5)
-
-
-## 右下：砲身温度（左下の艦体と対になる位置）
-func _draw_heat_gauge(vs: Vector2, s: float) -> void:
-	var gun = Game.gun
-	var heat: float = gun.heat
-	var over: bool = gun.overheated
-	var hc := _heat_col(heat, over)
-	var w := 20 * 11.0 * s
-	var x0 := vs.x - 28.0 * s - w
-	var y := vs.y - 40.0 * s
-	# 縦長の窓では左下の艦体ゲージと重ならないよう一段上げる
-	if vs.x < (28.0 + 270.0) * 2.0 * s + 60.0 * s:
-		y -= 40.0 * s
-	var label := "主砲　砲身温度"
-	if over:
-		label = "主砲　オーバーヒート　冷却中"
-	elif heat > 0.72:
-		label = "主砲　過熱注意"
-	_str(Vector2(vs.x - 28 * s, y - 10 * s), label, int(12 * s), hc if (over or heat > 0.72) else C_DIM, HORIZONTAL_ALIGNMENT_RIGHT, 0, int(2 * s))
-	for k in 20:
-		var on := heat > k * 0.05
-		var r := Rect2(x0 + k * 11.0 * s, y, 8.0 * s, 12.0 * s)
-		var seg_col := _heat_col(k * 0.05 + 0.025, false)
-		if over:
-			seg_col = hc
-		ctl.draw_rect(r, seg_col if on else Color(seg_col.r, seg_col.g, seg_col.b, 0.15))
-	# 重粒子砲が撃てる温度の境目
-	var lim := x0 + 8 * 11.0 * s - 1.5 * s
-	ctl.draw_line(Vector2(lim, y - 3 * s), Vector2(lim, y + 15 * s), Color(1, 1, 1, 0.5), 1.2 * s)
-	_str(Vector2(x0 - 8 * s, y + 11 * s), "%d%%" % int(heat * 100.0), int(14 * s), hc, HORIZONTAL_ALIGNMENT_RIGHT, 0)
-
-
 func _draw_reticle(vs: Vector2, s: float) -> void:
 	var gun = Game.gun
 	var p: Vector2 = gun.aim_screen
 	var locked: bool = gun.aim_target != null
-	var over: bool = gun.overheated
 	var col := C_UI
 	if locked:
 		col = Color(1.0, 0.5, 0.3)
-	if over:
-		col = Color(0.6, 0.6, 0.65)
 	var r := 16.0 * s
 	ctl.draw_arc(p, r, 0, TAU, 32, Color(col.r, col.g, col.b, 0.9), 1.6 * s)
 	for k in 4:
 		var d := Vector2.from_angle(k * PI * 0.5)
 		ctl.draw_line(p + d * (r + 3 * s), p + d * (r + 11 * s), col, 2.0 * s)
 	ctl.draw_circle(p, 2.0 * s, col)
-	# 砲身温度（照準の左の弧）。常に枠を出し、熱くなるほど太く赤くする
-	var heat: float = gun.heat
-	var hc := _heat_col(heat, over)
-	var hr := r + 16 * s
-	var a0 := PI * 0.6
-	var span := PI * 0.8
-	ctl.draw_arc(p, hr, a0, a0 + span, 28, Color(0.56, 0.86, 1.0, 0.18), 4.0 * s)
-	for k in 3:
-		# 目盛り（50% / 75%）
-		var tk: float = [0.5, 0.75, 1.0][k]
-		var d2 := Vector2.from_angle(a0 + span * tk)
-		ctl.draw_line(p + d2 * (hr - 4 * s), p + d2 * (hr + 4 * s), Color(1, 1, 1, 0.35), 1.2 * s)
-	if heat > 0.01:
-		ctl.draw_arc(p, hr, a0, a0 + span * heat, 28, hc, (3.0 + heat * 3.0) * s)
-	if over:
-		var cool := clampf((1.0 - heat) / 0.75, 0.0, 1.0)
-		_str(p + Vector2(0, r + 32 * s), "OVERHEAT", int(14 * s), hc, HORIZONTAL_ALIGNMENT_CENTER, 0, int(3 * s))
-		_str(p + Vector2(0, r + 48 * s), "冷却中 %d%%" % int(cool * 100.0), int(11 * s), Color(0.8, 0.85, 0.9), HORIZONTAL_ALIGNMENT_CENTER, 0, int(2 * s))
-	elif heat > 0.72:
-		if fmod(clock, 0.4) < 0.25:
-			_str(p + Vector2(0, r + 32 * s), "過熱注意", int(12 * s), hc, HORIZONTAL_ALIGNMENT_CENTER, 0, int(2 * s))
-	elif locked:
+	if locked:
 		_str(p + Vector2(r + 14 * s, -r), "LOCK", int(10 * s), col, HORIZONTAL_ALIGNMENT_LEFT, -1, int(2 * s))
 
 
@@ -461,12 +396,13 @@ func _draw_title(vs: Vector2, s: float) -> void:
 	_str(Vector2(vs.x * 0.5, vs.y * 0.34 + 74 * s), "GUNNER", int(72 * s), C_UI, HORIZONTAL_ALIGNMENT_CENTER, 0, int(6 * s))
 	_str(Vector2(vs.x * 0.5, vs.y * 0.34 + 108 * s), "巡洋艦ヒルカゼ　主砲砲手", int(15 * s), Color(0.8, 0.88, 1.0, 0.8), HORIZONTAL_ALIGNMENT_CENTER, 0, int(3 * s))
 	var y := vs.y * 0.34 + 150 * s
-	_str(Vector2(vs.x * 0.5, y), "マウス：照準　　左クリック：射撃　　右クリック：重粒子砲（高威力・高熱）", int(14 * s), Color(0.85, 0.92, 1.0), HORIZONTAL_ALIGNMENT_CENTER, 0, int(3 * s))
+	_str(Vector2(vs.x * 0.5, y), "マウス：照準　　左クリック：レーザー射撃（押しっぱなしで連射）", int(14 * s), Color(0.85, 0.92, 1.0), HORIZONTAL_ALIGNMENT_CENTER, 0, int(3 * s))
 	_str(Vector2(vs.x * 0.5, y + 24 * s), "艦の操縦はしない。航路は艦橋が決める。君は、何を撃つかだけを決める。", int(13 * s), Color(0.7, 0.8, 0.9, 0.85), HORIZONTAL_ALIGNMENT_CENTER, 0, int(3 * s))
 	var a := 0.75 + 0.25 * sin(clock * 3.0)
 	_str(Vector2(vs.x * 0.5, y + 70 * s), "クリックで出撃", int(20 * s), Color(1, 1, 1, a), HORIZONTAL_ALIGNMENT_CENTER, 0, int(4 * s))
-	_str(Vector2(vs.x * 0.5, vs.y - 44 * s), "約9分・ヘッドホン推奨　　Esc / P：一時停止　　M：消音", int(12 * s), Color(0.7, 0.8, 0.9, 0.6), HORIZONTAL_ALIGNMENT_CENTER, 0)
-	_str(Vector2(vs.x * 0.5, vs.y - 22 * s), "無線の英語音声は Azure AI Speech による AI 合成音声です", int(12 * s), Color(0.8, 0.88, 0.95, 0.85), HORIZONTAL_ALIGNMENT_CENTER, 0, int(3 * s))
+	_str(Vector2(vs.x * 0.5, vs.y - 64 * s), "約9分・ヘッドホン推奨　　Esc / P：一時停止　　M：消音", int(12 * s), Color(0.7, 0.8, 0.9, 0.6), HORIZONTAL_ALIGNMENT_CENTER, 0)
+	_str(Vector2(vs.x * 0.5, vs.y - 42 * s), "無線の英語音声は Azure AI Speech による AI 合成音声です", int(12 * s), Color(0.8, 0.88, 0.95, 0.85), HORIZONTAL_ALIGNMENT_CENTER, 0, int(3 * s))
+	_str(Vector2(vs.x * 0.5, vs.y - 22 * s), "効果音（レーザー）：ポケットサウンド – https://pocket-se.info/", int(12 * s), Color(0.8, 0.88, 0.95, 0.85), HORIZONTAL_ALIGNMENT_CENTER, 0, int(3 * s))
 
 
 func _draw_result(vs: Vector2, s: float) -> void:

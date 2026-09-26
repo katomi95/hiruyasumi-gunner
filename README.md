@@ -14,8 +14,7 @@
 | 操作 | 入力 |
 | --- | --- |
 | 照準 | マウス |
-| 射撃 | 左クリック（押しっぱなしで連射。撃ち続けるとオーバーヒート） |
-| 重粒子砲 | 右クリック（高威力。一発で大きく熱を持つ） |
+| 射撃 | 左クリック（レーザー。押しっぱなしで連射） |
 | 一時停止 | Esc / P |
 | 消音 | M |
 
@@ -88,6 +87,8 @@ Main
 - `tools/gen_voice_fx.py` … 無線・艦内通話らしい音質にして `audio/voice/` へ。`scripts/voice_lines.gd` も生成
 - `tools/make_font.py` … 使用文字だけの Noto Sans JP Bold を作る。**画面の文言（漢字）を足したら必ず実行する**（入っていない字は化ける）
 - `docs/` … Web 書き出し（GitHub Pages 公開用）
+- `audio/laser.mp3`（ポケットサウンド）は規約で素材そのものの二次配布が禁止されているため、このリポジトリには含めていない。
+  ゲーム（`docs/`）には組み込み済み。手元でビルドする時に無ければ合成の発射音で代用される
 
 ### Web 版について
 
@@ -105,7 +106,8 @@ godot --path . -- --shots=<dir> --at=-1,30,230         # その時刻を撮影�
 
 ## クレジット
 
-- 効果音：すべて `tools/gen_audio.py` によるプログラム合成
+- 効果音（レーザーの発射音）：[ポケットサウンド](https://pocket-se.info/)
+- その他の効果音：`tools/gen_audio.py` によるプログラム合成
 - 無線の英語音声：[Azure AI Speech](https://azure.microsoft.com/products/ai-services/text-to-speech)（有料プラン）の既定のニューラル音声で生成した **AI 合成音声**を加工（Davis・Guy・Tony・Aria・Jenny）
 - フォント：Noto Sans JP（SIL Open Font License 1.1、`fonts/OFL.txt`）。使用文字のみにサブセット化
 - エンジン：[Godot Engine](https://godotengine.org/) 4.6

@@ -23,6 +23,11 @@ var voice_player: AudioStreamPlayer
 var voice_queue: Array = []   # [id, 要求された時刻]
 var fx_bus := 2
 var voice_duck := 0.0
+# レーザーの発射音（ポケットサウンドの laser.mp3）。長い音なので同時に鳴らすのは 4 つまで、それぞれ短く切る
+const LASER_PATH := "res://audio/laser.mp3"
+var laser_stream: AudioStream
+var laser_pool: Array = []
+var laser_i := 0
 
 
 func _ready() -> void:
@@ -38,6 +43,14 @@ func _ready() -> void:
 			w.loop_begin = 0
 			w.loop_end = int(w.get_length() * w.mix_rate)
 		streams[n] = s
+	# 元の mp3 は公開リポジトリに含めない。無い時は合成の発射音で代用する
+	if ResourceLoader.exists(LASER_PATH):
+		laser_stream = load(LASER_PATH)
+	for i in 4:
+		var lp := AudioStreamPlayer.new()
+		lp.bus = "FX"
+		add_child(lp)
+		laser_pool.append(lp)
 	for i in 20:
 		var p := AudioStreamPlayer.new()
 		p.bus = "FX"
@@ -94,6 +107,28 @@ func loop(n: String, on: bool, vol_db := 0.0, pitch := 1.0) -> void:
 		p.play()
 	elif not on and p.playing:
 		p.stop()
+
+
+## レーザーの発射音
+func laser() -> void:
+	if laser_stream == null:
+		play("shot", -6.0, randf_range(0.94, 1.08))
+		return
+	var p: AudioStreamPlayer = laser_pool[laser_i]
+	laser_i = (laser_i + 1) % laser_pool.size()
+	if p.has_meta("tween"):
+		var old: Tween = p.get_meta("tween")
+		if old and old.is_valid():
+			old.kill()
+	p.stream = laser_stream
+	p.volume_db = -5.0
+	p.pitch_scale = randf_range(0.97, 1.04)
+	p.play()
+	var tw := create_tween()
+	tw.tween_interval(0.22)
+	tw.tween_property(p, "volume_db", -50.0, 0.2)
+	tw.tween_callback(p.stop)
+	p.set_meta("tween", tw)
 
 
 ## 無線の声を流す。id は VoiceLines の値

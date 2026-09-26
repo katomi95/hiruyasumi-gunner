@@ -10,6 +10,11 @@ var armor: Array = []          # {node, aabb} または {node, r}
 var bolts: Array = []          # 敵弾
 var bolt_free: Array = []
 var flyby_cd := 0.0
+## 敵の攻撃の激しさ（射撃の頻度・命中率）。レーザー化で自艦の火力が上がった分、敵も強める
+const FIGHTER_HIT := 0.2
+const ATTACKER_HIT := 0.24
+const ATTACKER_BURST := 4
+const TURRET_HIT := 0.27
 var warn_cd := 0.0
 
 
@@ -120,7 +125,7 @@ func missile(from_world: Vector3, opts := {}) -> Target:
 	e.life = 26.0
 	var rel: Vector3 = from_world - Game.rail.pos
 	var up: Vector3 = opts.get("up", Vector3.UP)
-	e.d = {"speed": 60.0, "vmax": opts.get("speed", 150.0), "ph": randf() * TAU, "wob": randf_range(20, 40), "dmg": opts.get("dmg", 5.0)}
+	e.d = {"speed": 60.0, "vmax": opts.get("speed", 165.0), "ph": randf() * TAU, "wob": randf_range(20, 40), "dmg": opts.get("dmg", 5.0)}
 	# 必ず一度カメラの前方を通ってから自艦へ向かう（画面外から不意打ちしない）
 	var cam_l: Vector3 = Game.rail.cam_pos - Game.rail.pos
 	var vb: Basis = Game.rail.view_basis()
@@ -205,7 +210,7 @@ func turret(parent: Node3D, pos: Vector3, up: Vector3, opts := {}) -> Target:
 	e.label = opts.get("label", "砲台")
 	e.group = opts.get("group", "")
 	e.d = {"mode": opts.get("mode", "player"), "rate": opts.get("rate", 3.6), "cd": randf_range(1.0, 3.0),
-		"range": opts.get("range", 1500.0), "big": big, "hit": opts.get("hit", 0.22), "dmg": opts.get("dmg", 3.0)}
+		"range": opts.get("range", 1500.0), "big": big, "hit": opts.get("hit", TURRET_HIT), "dmg": opts.get("dmg", 3.0)}
 	e.setup_flash()
 	return e
 
@@ -550,8 +555,8 @@ func _fighter(e: Target, dt: float, cam_pos: Vector3) -> void:
 		dd["cd"] -= dt
 		if dd["cd"] <= 0.0:
 			dd["cd"] = randf_range(1.5, 3.0)
-			if randf() < float(dd["fire"]) * 3.0:
-				enemy_bolt(e.global_position, randf() < 0.15, 2.0, 380.0, "fighter")
+			if randf() < float(dd["fire"]) * 4.0:
+				enemy_bolt(e.global_position, randf() < FIGHTER_HIT, 2.0, 380.0, "fighter")
 	if absf(e.local.x) > 2200.0 or e.local.z > 250.0 or e.local.z < -4000.0 or absf(e.local.y) > 1500.0:
 		targets.erase(e)
 		e.queue_free()
@@ -576,9 +581,9 @@ func _attacker(e: Target, dt: float, cam_l: Vector3) -> void:
 			if dd["cd"] < 0.8:
 				e.charge = clampf(1.0 - dd["cd"] / 0.8, 0.0, 1.0)
 			if dd["cd"] <= 0.0:
-				dd["cd"] = randf_range(2.2, 3.0)
+				dd["cd"] = randf_range(1.7, 2.4)
 				e.charge = 0.0
-				for i in 3:
+				for i in ATTACKER_BURST:
 					Game.fx.later(i * 0.13, _attacker_shot.bind(e))
 			if tt > float(dd["hold"]):
 				e.st = "out"
@@ -603,7 +608,7 @@ func _attacker(e: Target, dt: float, cam_l: Vector3) -> void:
 
 func _attacker_shot(e) -> void:
 	if is_instance_valid(e) and e.alive:
-		enemy_bolt(e.global_position + (Game.rail.cam_pos - e.global_position).normalized() * 8.0, randf() < 0.2, 3.0, 440.0, "attacker")
+		enemy_bolt(e.global_position + (Game.rail.cam_pos - e.global_position).normalized() * 8.0, randf() < ATTACKER_HIT, 3.0, 440.0, "attacker")
 
 
 func _missile(e: Target, dt: float, cam_l: Vector3) -> void:
@@ -687,7 +692,7 @@ func _turret(e: Target, dt: float, cam_pos: Vector3) -> void:
 		return
 	dd["cd"] -= dt
 	if dd["cd"] <= 0.0:
-		dd["cd"] = float(dd["rate"]) * randf_range(0.8, 1.25)
+		dd["cd"] = float(dd["rate"]) * randf_range(0.7, 1.05)
 		var mz: Vector3 = e.head.global_transform * Vector3(0, 3.2 * (2.8 if dd["big"] else 1.0), -19.0 * (2.8 if dd["big"] else 1.0))
 		if mode == "player":
 			enemy_bolt(mz, randf() < float(dd["hit"]), float(dd["dmg"]), 520.0, "turret")

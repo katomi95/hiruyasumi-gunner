@@ -5,9 +5,7 @@ class_name VoiceLines
 const BY_TEXT := {
 	"全艦、前進。第七打撃群は中央を進め。": "v01",
 	"ヒルカゼ砲手、配置よし。マウスで狙い、左クリックで撃て。": "v02",
-	"撃ち続けると砲身が焼ける。熱の円に気をつけろ。": "v03",
 	"前方に敵戦列。各艦、砲撃始め。": "v04",
-	"右クリックは重粒子砲。一撃は重いが、熱も一気に溜まる。": "v05",
 	"ミサイル接近！ 赤い菱形だ。先に落とせ！": "v06",
 	"敵戦列へ突入する。右舷、敵巡洋艦！": "v07",
 	"攻撃艇は居座って撃ってくる。赤く光ったら急げ。": "v08",
@@ -49,9 +47,7 @@ const BY_TEXT := {
 const EN := {
 	"v01": "All ships, advance. Seventh Strike Group, take the center.",
 	"v02": "Hirukaze gunner, you're on station. Put the reticle on them, and fire.",
-	"v03": "Hold the trigger too long and you'll cook the barrels. Watch your heat.",
 	"v04": "Enemy line, dead ahead. All ships, open fire.",
-	"v05": "The heavy cannon hits hard, but it heats the barrels fast. Use it wisely.",
 	"v06": "Missiles inbound! Red diamonds. Take them out first!",
 	"v07": "We're breaking into their line. Enemy cruiser, starboard side!",
 	"v08": "Gunboats will hang around and shoot. When they glow red, hurry.",

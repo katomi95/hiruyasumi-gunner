@@ -199,13 +199,11 @@ func _build_timeline() -> void:
 	ev(5.0, func(): H.radio("砲術長", "ヒルカゼ砲手、配置よし。マウスで狙い、左クリックで撃て。"))
 	ev(8.0, func(): lr(3, 70, -650))
 	ev(13.0, func(): rl(3, -40, -700))
-	ev(16.5, func(): H.radio("砲術長", "撃ち続けると砲身が焼ける。熱の円に気をつけろ。"))
 	ev(19.0, func(): head(4, 40, 30))
 	ev(24.0, func(): Game.allies.wing(4, Vector3(-600, 120, -500), Vector3(200, -10, -40)))
 	ev(26.0, func(): lr(3, 150, -900))
 	ev(30.0, func(): H.radio("旗艦", "前方に敵戦列。各艦、砲撃始め。"))
 	ev(32.0, func(): head(5, -60, 60))
-	ev(35.0, func(): H.radio("砲術長", "右クリックは重粒子砲。一撃は重いが、熱も一気に溜まる。"))
 	ev(38.0, func(): lr(3, 40, -700))
 	ev(38.0 + 0.01, func(): rl(3, -80, -800))
 	ev(44.0, func(): missiles_far(2))
@@ -321,19 +319,19 @@ func _build_timeline() -> void:
 
 
 # ------------------------------------------------------------------ 出現のひな形（カメラ基準）
-func lr(n: int, y := 60.0, z := -700.0, fire := 0.0) -> void:
+func lr(n: int, y := 60.0, z := -700.0, fire := 0.12) -> void:
 	Game.enemies.fighters(n, Vector3(-850, y, z), Vector3(240, -y * 0.05, 50), {"fire": fire})
 
 
-func rl(n: int, y := -40.0, z := -750.0, fire := 0.0) -> void:
+func rl(n: int, y := -40.0, z := -750.0, fire := 0.12) -> void:
 	Game.enemies.fighters(n, Vector3(850, y, z), Vector3(-240, -y * 0.05, 50), {"fire": fire})
 
 
-func head(n: int, x := 0.0, y := 40.0, fire := 0.0) -> void:
+func head(n: int, x := 0.0, y := 40.0, fire := 0.12) -> void:
 	Game.enemies.fighters(n, Vector3(x, y, -1700), Vector3(-x * 0.03, -y * 0.04, 250), {"fire": fire})
 
 
-func dive(n: int, x := 0.0, fire := 0.0) -> void:
+func dive(n: int, x := 0.0, fire := 0.12) -> void:
 	Game.enemies.fighters(n, Vector3(x, 620, -900), Vector3(-x * 0.05, -180, 100), {"fire": fire})
 
 
