@@ -1,0 +1,54 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/world.gd" id="2_world"]
+[ext_resource type="Script" path="res://scripts/rail.gd" id="3_rail"]
+[ext_resource type="Script" path="res://scripts/gun.gd" id="4_gun"]
+[ext_resource type="Script" path="res://scripts/enemies.gd" id="5_enemies"]
+[ext_resource type="Script" path="res://scripts/allies.gd" id="6_allies"]
+[ext_resource type="Script" path="res://scripts/mission.gd" id="7_mission"]
+[ext_resource type="Script" path="res://scripts/effects.gd" id="8_fx"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="9_hud"]
+[ext_resource type="Script" path="res://scripts/audio.gd" id="10_audio"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_main")
+
+[node name="World" type="Node3D" parent="."]
+script = ExtResource("2_world")
+
+[node name="RailPath" type="Path3D" parent="."]
+script = ExtResource("3_rail")
+
+[node name="Follow" type="PathFollow3D" parent="RailPath"]
+
+[node name="ShipRig" type="Node3D" parent="RailPath/Follow"]
+
+[node name="PlayerGun" type="Node3D" parent="RailPath/Follow/ShipRig"]
+script = ExtResource("4_gun")
+
+[node name="CamRig" type="Node3D" parent="RailPath"]
+
+[node name="Camera" type="Camera3D" parent="RailPath/CamRig"]
+current = true
+fov = 70.0
+near = 0.4
+far = 40000.0
+
+[node name="EnemyManager" type="Node3D" parent="."]
+script = ExtResource("5_enemies")
+
+[node name="AllyManager" type="Node3D" parent="."]
+script = ExtResource("6_allies")
+
+[node name="MissionManager" type="Node" parent="."]
+script = ExtResource("7_mission")
+
+[node name="EffectsManager" type="Node3D" parent="."]
+script = ExtResource("8_fx")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+script = ExtResource("9_hud")
+
+[node name="Audio" type="Node" parent="."]
+script = ExtResource("10_audio")

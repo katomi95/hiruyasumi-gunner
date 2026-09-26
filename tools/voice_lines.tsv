@@ -1,0 +1,41 @@
+id	speaker	jp	en
+v01	旗艦	全艦、前進。第七打撃群は中央を進め。	All ships, advance. Seventh Strike Group, take the center.
+v02	砲術長	ヒルカゼ砲手、配置よし。マウスで狙い、左クリックで撃て。	Hirukaze gunner, you're on station. Put the reticle on them, and fire.
+v03	砲術長	撃ち続けると砲身が焼ける。熱の円に気をつけろ。	Hold the trigger too long and you'll cook the barrels. Watch your heat.
+v04	旗艦	前方に敵戦列。各艦、砲撃始め。	Enemy line, dead ahead. All ships, open fire.
+v05	砲術長	右クリックは重粒子砲。一撃は重いが、熱も一気に溜まる。	The heavy cannon hits hard, but it heats the barrels fast. Use it wisely.
+v06	砲術長	ミサイル接近！ 赤い菱形だ。先に落とせ！	Missiles inbound! Red diamonds. Take them out first!
+v07	艦長	敵戦列へ突入する。右舷、敵巡洋艦！	We're breaking into their line. Enemy cruiser, starboard side!
+v08	砲術長	攻撃艇は居座って撃ってくる。赤く光ったら急げ。	Gunboats will hang around and shoot. When they glow red, hurry.
+v09	旗艦	砲台を潰せ！ 友軍が撃たれている！	Knock out those turrets! Our ships are taking fire!
+v10	航法	機雷帯に入る。進路上の機雷だけ撃て。	Entering the minefield. Only shoot the mines in our path.
+v11	砲術長	橙の印が本艦の進路上だ。全部撃つ必要はない。	Orange markers are on our course. You don't have to clear them all.
+v12	艦隊通信	黄の印は護衛艦の進路上。余裕があれば撃て。	Yellow markers are in the escorts' path. Hit them if you can.
+v13	航法	機雷帯を抜けた。全艦、短距離跳躍に入る。	We're clear of the minefield. All ships, stand by for jump.
+v14	旗艦	跳躍先は敵戦艦の真横だ。出たらすぐ撃てるようにしておけ。	We'll come out right beside their battleship. Be ready to fire the moment we exit.
+v15	艦長	敵戦艦の舷側を抜ける。砲台を片っ端から潰せ！	We're running down the battleship's flank. Take out every turret you see!
+v16	旗艦	敵戦艦の主砲が友軍を狙っている！	Their main guns are targeting our fleet!
+v17	艦長	敵戦艦を抜けた。	We're past the battleship.
+v18	旗艦	敵要塞に高エネルギー反応！ 狙いは左翼艦隊だ！	Massive energy reading from the fortress! It's aimed at our left wing!
+v19	砲術長	砲口の周りの集束器、三基を全部潰せ！	The focusing nodes around the muzzle. Destroy all three!
+v20	旗艦	要塞宙域を離脱する。全艦、跳躍！ 行き先は質量兵器の航路だ！	We're leaving the fortress. All ships, jump! Destination, the mass weapon's path!
+v21	旗艦	質量兵器が防衛ラインへ向かっている！ 推進器を止めろ！	The mass weapon is heading for our defense line! Stop its thrusters!
+v22	艦長	離脱する！ 砲座、後方へ旋回！	We're pulling out! Turret, swing aft!
+v23	砲術長	追撃機多数！ ミサイルも来るぞ！	Multiple pursuers! Missiles coming in, too!
+v24	旗艦	こちら友軍本隊。ヒルカゼ、よく戻った。後ろは任せろ。	Main fleet here. Welcome back, Hirukaze. We've got your six.
+v25	旗艦	作戦終了。全艦、帰投する。	Operation complete. All ships, return to base.
+v26	艦隊通信	友軍巡洋艦、被弾……！ 砲台を黙らせろ！	Friendly cruiser hit! Silence those turrets!
+v27	艦隊通信	敵戦艦の主砲、友軍に命中……！	Battleship main gun... it hit one of ours!
+v28	旗艦	砲台沈黙！ 左翼艦隊は無事だ。よくやった！	The cannon is silent! Our left wing is safe. Good work!
+v29	艦隊通信	大型レーザー、左翼艦隊に直撃……！	Direct hit on the left wing... we're losing ships!
+v30	航法	副砲の掃射が来る！ 潜るぞ、つかまれ！	Sweep beam incoming! We're diving. Hold on!
+v31	艦隊通信	アオバト被弾！ 航行に支障なし！	Aobato is hit! She's still flying!
+v32	旗艦	推進停止！ シールドが消えた、制御装置を狙え！	Thrusters are down! The shields are gone. Hit the control units!
+v33	砲術長	装甲が吹き飛んだ！ 爆破点を撃て！	The armor's blown open! Hit the core!
+v34	旗艦	質量兵器、崩壊！ 防衛ラインは守られた！	The mass weapon is breaking up! The defense line is safe!
+v35	旗艦	……防衛ラインの艦隊が、やられた。だが作戦は続行する。離脱しろ！	We've lost the defense line fleet... But the operation goes on. Get out of there!
+v36	艦隊通信	前方に敵巡洋艦、跳躍してきた！	Enemy cruiser jumping in, dead ahead!
+escort_0	艦隊通信	（護衛艦アオバト轟沈）	Escort Aobato is down!
+escort_1	艦隊通信	（護衛艦シラサギ轟沈）	Escort Shirasagi is down!
+escort_2	艦隊通信	（護衛艦カワセミ轟沈）	Escort Kawasemi is down!
+escort_3	艦隊通信	（護衛艦ツバメ轟沈）	Escort Tsubame is down!
